@@ -86,19 +86,16 @@
             padding-bottom: 1.2rem;  
         }  
 
-        /* تنسيق اللوجو المرفق ودمجه ذكياً مع الألوان */
         .logo img {  
             height: 65px;  
             width: auto;
             display: block;
             object-fit: contain;
-            /* يجعل اللوجو يظهر باللون الأسود الشفاف في الوضع الفاتح */
             filter: invert(1);
             mix-blend-mode: multiply;
         }  
 
         body.dark .logo img {
-            /* يجعل اللوجو يظهر باللون الأبيض الشفاف في الوضع المظلم */
             filter: none;
             mix-blend-mode: screen;
         }
@@ -219,25 +216,6 @@
             transform: scale(0.97);  
         }  
 
-        .warning-banner {  
-            margin-top: 0.8rem;  
-            font-size: 0.75rem;  
-            background: rgba(255, 80, 80, 0.08);  
-            padding: 0.5rem 0.8rem;  
-            border-radius: 30px;  
-            border: 1px solid rgba(255, 80, 80, 0.2);  
-            opacity: 0.8;  
-            text-align: center;  
-            font-weight: 500;  
-            color: #c0392b;  
-        }  
-
-        body.dark .warning-banner {  
-            background: rgba(255, 100, 100, 0.1);  
-            border-color: rgba(255, 100, 100, 0.2);  
-            color: #e74c3c;  
-        }  
-
         .footer-note {  
             margin-top: 2.5rem;  
             text-align: center;  
@@ -259,7 +237,6 @@
 <body>  
 <div class="container">  
     <div class="header">  
-        <!-- وضع اللوجو المرفق هنا -->
         <div class="logo">  
             <img src="logo.jpg" alt="fps24">  
         </div>  
@@ -270,7 +247,7 @@
     </div>  
 
     <div class="team-grid" id="teamGrid"></div>  
-    <div class="footer-note" id="footerNote">✦ فريق المونتاج ✦</div>
+    <div class="footer-note" id="footerNote">✦ 24fps ✦</div>
 </div>  
 
 <script>  
@@ -310,12 +287,8 @@
         role_coloring: { ar: "تلوين و موشن", en: "Coloring & Motion" },  
         role_gaming: { ar: "جيمنغ", en: "Gaming" },  
         role_sound: { ar: "صوت", en: "Sound" },  
-        warning_text: {  
-            ar: "🚫 ممنوع منعاً باتاً طلب السياسيين أو اللواط أو الإسرائيليين",  
-            en: "🚫 Strictly forbidden to request politicians, sodomy, or Israelis"  
-        },  
         footer: { ar: "✦ 24fps ✦", en: "✦ 24fps ✦" },  
-        no_links: { ar: "قائد التيم ", en: "Team leader" }  
+        no_links: { ar: "قائد التيم", en: "Team leader" }  
     };  
   
     let currentLang = "ar";  
@@ -354,11 +327,8 @@
                 });  
             } else {  
                 const noLinksText = translations.no_links[lang] || 'No links';  
-                html += `<span style="padding:0.6rem 1rem; opacity:0.6;"><i class="fas fa-ban"></i> ${noLinksText}</span>`;  
+                html += `<span style="padding:0.6rem 1rem; opacity:0.6;"><i class="fas fa-star"></i> ${noLinksText}</span>`;  
             }  
-  
-            const warning = translations.warning_text[lang] || translations.warning_text['ar'];  
-            html += `<div class="warning-banner">${warning}</div>`;  
   
             html += `</div></div>`;  
         });  
@@ -388,4 +358,3 @@
 </script>  
 </body>  
 </html>
-
