@@ -1,0 +1,391 @@
+<!DOCTYPE html>  
+<html lang="ar" dir="rtl">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>fps24</title>  
+    <!-- Font Awesome -->  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
+    <style>  
+        /* استدعاء الخط */
+        @font-face {
+            font-family: 'Thmanyah Serif Text';
+            src: url('thmanyah-serif-text-bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        * {  
+            margin: 0;  
+            padding: 0;  
+            box-sizing: border-box;  
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;  
+        }  
+
+        :root {  
+            --bg: #f2f0e8;  
+            --card-bg: #ffffffdd;  
+            --text: #2c3e50;  
+            --shadow: 0 8px 20px rgba(0,0,0,0.08);  
+            --border: #e0dcd2;  
+            --accent: #b8a99c;  
+            --accent-dark: #7f6e60;  
+            --radius: 24px;  
+            --transition: 0.25s ease;  
+        }  
+
+        body.dark {  
+            --bg: #1a1e24;  
+            --card-bg: #2b3138dd;  
+            --text: #eaeef2;  
+            --shadow: 0 8px 20px rgba(0,0,0,0.5);  
+            --border: #3d444d;  
+            --accent: #9b8b7e;  
+            --accent-dark: #c5b5a8;  
+        }  
+
+        body {  
+            background: var(--bg);  
+            color: var(--text);  
+            font-family: 'Thmanyah Serif Text', 'Segoe UI', 'Tajawal', system-ui, sans-serif;  
+            min-height: 100vh;  
+            padding: 2rem 1rem;  
+            display: flex;  
+            flex-direction: column;  
+            align-items: center;  
+            backdrop-filter: blur(2px);  
+            background-image: radial-gradient(circle at 10% 30%, rgba(255, 235, 210, 0.3) 0%, transparent 30%),  
+                              radial-gradient(circle at 90% 70%, rgba(210, 225, 240, 0.3) 0%, transparent 40%);  
+        }  
+
+        body.dark {  
+            background-image: radial-gradient(circle at 10% 30%, rgba(60, 70, 90, 0.3) 0%, transparent 30%),  
+                              radial-gradient(circle at 90% 70%, rgba(40, 50, 70, 0.3) 0%, transparent 40%);  
+        }  
+
+        .container {  
+            max-width: 1300px;  
+            width: 100%;  
+            background: var(--card-bg);  
+            backdrop-filter: blur(10px);  
+            -webkit-backdrop-filter: blur(10px);  
+            border-radius: var(--radius);  
+            padding: 2rem 1.5rem;  
+            box-shadow: var(--shadow);  
+            border: 1px solid var(--border);  
+        }  
+
+        .header {  
+            display: flex;  
+            flex-wrap: wrap;  
+            align-items: center;  
+            justify-content: space-between;  
+            gap: 1rem;  
+            margin-bottom: 2.5rem;  
+            border-bottom: 1px solid var(--border);  
+            padding-bottom: 1.2rem;  
+        }  
+
+        /* تنسيق اللوجو المرفق ودمجه ذكياً مع الألوان */
+        .logo img {  
+            height: 65px;  
+            width: auto;
+            display: block;
+            object-fit: contain;
+            /* يجعل اللوجو يظهر باللون الأسود الشفاف في الوضع الفاتح */
+            filter: invert(1);
+            mix-blend-mode: multiply;
+        }  
+
+        body.dark .logo img {
+            /* يجعل اللوجو يظهر باللون الأبيض الشفاف في الوضع المظلم */
+            filter: none;
+            mix-blend-mode: screen;
+        }
+
+        .controls {  
+            display: flex;  
+            flex-wrap: wrap;  
+            align-items: center;  
+            gap: 0.8rem;  
+        }  
+
+        .controls select, .controls button {  
+            background: var(--bg);  
+            border: 1px solid var(--border);  
+            color: var(--text);  
+            padding: 0.5rem 1rem;  
+            border-radius: 40px;  
+            font-size: 0.9rem;  
+            cursor: pointer;  
+            outline: none;  
+            backdrop-filter: blur(4px);  
+            font-family: inherit;  
+        }  
+
+        .controls select {  
+            min-width: 160px;  
+        }  
+
+        .theme-toggle {  
+            background: var(--bg);  
+            border: 1px solid var(--border);  
+            border-radius: 40px;  
+            padding: 0.45rem 1rem;  
+            font-size: 1.2rem;  
+            line-height: 1;  
+        }  
+
+        .team-grid {  
+            display: grid;  
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));  
+            gap: 2rem;  
+            margin-top: 1rem;  
+        }  
+
+        .member-card {  
+            background: var(--card-bg);  
+            border-radius: var(--radius);  
+            padding: 1.5rem 1.2rem 1.8rem;  
+            border: 1px solid var(--border);  
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);  
+            backdrop-filter: blur(4px);  
+            transition: transform 0.2s, box-shadow 0.2s;  
+            display: flex;  
+            flex-direction: column;  
+        }  
+
+        .member-card:hover {  
+            transform: translateY(-6px);  
+            box-shadow: 0 16px 30px rgba(0,0,0,0.06);  
+        }  
+
+        .member-name {  
+            font-size: 1.7rem;  
+            font-weight: 500;  
+            letter-spacing: -0.3px;  
+            display: flex;  
+            align-items: center;  
+            gap: 0.5rem;  
+            flex-wrap: wrap;  
+            margin-bottom: 0.4rem;  
+        }  
+
+        .member-role {  
+            font-size: 0.9rem;  
+            background: var(--bg);  
+            padding: 0.2rem 1rem;  
+            border-radius: 30px;  
+            border: 1px solid var(--border);  
+            color: var(--accent-dark);  
+            font-weight: 400;  
+        }  
+
+        .member-links {  
+            margin-top: 1.2rem;  
+            display: flex;  
+            flex-direction: column;  
+            gap: 0.7rem;  
+            flex: 1;  
+        }  
+
+        .member-links a {  
+            display: flex;  
+            align-items: center;  
+            gap: 0.6rem;  
+            color: var(--text);  
+            text-decoration: none;  
+            padding: 0.6rem 1rem;  
+            border-radius: 40px;  
+            background: var(--bg);  
+            border: 1px solid transparent;  
+            transition: background 0.15s, border 0.15s;  
+            font-size: 0.95rem;  
+            word-break: break-word;  
+        }  
+
+        .member-links a i {  
+            width: 1.6rem;  
+            color: var(--accent-dark);  
+            font-size: 1.1rem;  
+        }  
+
+        .member-links a:hover {  
+            background: var(--border);  
+            border-color: var(--accent);  
+        }  
+
+        .member-links a:active {  
+            transform: scale(0.97);  
+        }  
+
+        .warning-banner {  
+            margin-top: 0.8rem;  
+            font-size: 0.75rem;  
+            background: rgba(255, 80, 80, 0.08);  
+            padding: 0.5rem 0.8rem;  
+            border-radius: 30px;  
+            border: 1px solid rgba(255, 80, 80, 0.2);  
+            opacity: 0.8;  
+            text-align: center;  
+            font-weight: 500;  
+            color: #c0392b;  
+        }  
+
+        body.dark .warning-banner {  
+            background: rgba(255, 100, 100, 0.1);  
+            border-color: rgba(255, 100, 100, 0.2);  
+            color: #e74c3c;  
+        }  
+
+        .footer-note {  
+            margin-top: 2.5rem;  
+            text-align: center;  
+            font-size: 0.85rem;  
+            color: var(--accent-dark);  
+            border-top: 1px solid var(--border);  
+            padding-top: 1.8rem;  
+            opacity: 0.7;  
+        }  
+
+        @media (max-width: 600px) {  
+            .container { padding: 1.2rem; }  
+            .header { flex-direction: column; align-items: center; }  
+            .controls { justify-content: center; }  
+            .controls select { min-width: 120px; }  
+        }  
+    </style>
+</head>  
+<body>  
+<div class="container">  
+    <div class="header">  
+        <!-- وضع اللوجو المرفق هنا -->
+        <div class="logo">  
+            <img src="logo.jpg" alt="fps24">  
+        </div>  
+        <div class="controls">  
+            <select id="langSelect" aria-label="اختر اللغة"></select>  
+            <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع"><i class="fas fa-moon"></i></button>  
+        </div>  
+    </div>  
+
+    <div class="team-grid" id="teamGrid"></div>  
+    <div class="footer-note" id="footerNote">✦ فريق المونتاج ✦</div>
+</div>  
+
+<script>  
+    const teamData = [  
+        {  
+            name: "معاذ",  
+            roleKey: "reels",  
+            links: ["https://drive.google.com/drive/folders/1qrK-veiOuiSyVe084tenNAP5QuYtTJsl"]  
+        },  
+        {  
+            name: "علي",  
+            roleKey: "coloring",  
+            links: ["https://drive.google.com/drive/folders/1W8S5aX83_bNxBEJvyam8HryfCw_DydoL?usp=sharing"]  
+        },  
+        {  
+            name: "سيف",  
+            roleKey: "gaming",  
+            links: [  
+                "https://youtu.be/Y9ujaIgXrQE?si=gbL_yIvbTNVfucFb",  
+                "https://youtu.be/YulSK0LDkvY?si=Hn2QhZHTBvd0Hyxv"  
+            ]  
+        },  
+        {  
+            name: "مجدي",  
+            roleKey: "sound",  
+            links: []  
+        }  
+    ];  
+  
+    const languages = [  
+        { code: "ar", label: "العربية", native: "العربية" },  
+        { code: "en", label: "الإنجليزية", native: "English" }  
+    ];  
+  
+    const translations = {  
+        role_reels: { ar: "ريلز", en: "Reels" },  
+        role_coloring: { ar: "تلوين و موشن", en: "Coloring & Motion" },  
+        role_gaming: { ar: "جيمنغ", en: "Gaming" },  
+        role_sound: { ar: "صوت", en: "Sound" },  
+        warning_text: {  
+            ar: "🚫 ممنوع منعاً باتاً طلب السياسيين أو اللواط أو الإسرائيليين",  
+            en: "🚫 Strictly forbidden to request politicians, sodomy, or Israelis"  
+        },  
+        footer: { ar: "✦ فريق المونتاج ✦", en: "✦ Montage Team ✦" },  
+        no_links: { ar: "لا توجد روابط", en: "No links" }  
+    };  
+  
+    let currentLang = "ar";  
+    let isDark = false;  
+  
+    const langSelect = document.getElementById('langSelect');  
+    const themeToggle = document.getElementById('themeToggle');  
+    const teamGrid = document.getElementById('teamGrid');  
+    const footerNote = document.getElementById('footerNote');  
+  
+    languages.forEach(lang => {  
+        const opt = document.createElement('option');  
+        opt.value = lang.code;  
+        opt.textContent = `${lang.label} (${lang.native})`;  
+        if (lang.code === currentLang) opt.selected = true;  
+        langSelect.appendChild(opt);  
+    });  
+  
+    function render() {  
+        const lang = currentLang;  
+        let html = '';  
+        teamData.forEach(member => {  
+            const roleKey = member.roleKey;  
+            const roleTranslation = translations[`role_${roleKey}`]?.[lang] || roleKey;  
+            const links = member.links;  
+  
+            html += `<div class="member-card">`;  
+            html += `<div class="member-name">${member.name} <span class="member-role">${roleTranslation}</span></div>`;  
+            html += `<div class="member-links">`;  
+  
+            if (links && links.length > 0) {  
+                links.forEach(link => {  
+                    const icon = link.includes('drive.google.com') ? 'fa-google-drive' :  
+                                 link.includes('youtu.be') || link.includes('youtube.com') ? 'fa-youtube' : 'fa-link';  
+                    html += `<a href="${link}" target="_blank" rel="noopener"><i class="fab ${icon}"></i> ${link}</a>`;  
+                });  
+            } else {  
+                const noLinksText = translations.no_links[lang] || 'No links';  
+                html += `<span style="padding:0.6rem 1rem; opacity:0.6;"><i class="fas fa-ban"></i> ${noLinksText}</span>`;  
+            }  
+  
+            const warning = translations.warning_text[lang] || translations.warning_text['ar'];  
+            html += `<div class="warning-banner">${warning}</div>`;  
+  
+            html += `</div></div>`;  
+        });  
+  
+        teamGrid.innerHTML = html;  
+        footerNote.textContent = translations.footer[lang] || translations.footer['ar'];  
+    }  
+  
+    function toggleTheme() {  
+        isDark = !isDark;  
+        document.body.classList.toggle('dark', isDark);  
+        const icon = themeToggle.querySelector('i');  
+        icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';  
+    }  
+  
+    function changeLanguage(code) {  
+        currentLang = code;  
+        render();  
+    }  
+  
+    langSelect.addEventListener('change', (e) => {  
+        changeLanguage(e.target.value);  
+    });  
+  
+    themeToggle.addEventListener('click', toggleTheme);  
+    render();  
+</script>  
+</body>  
+</html>
+
