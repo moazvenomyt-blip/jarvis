@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: jarvis-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        value: MNUBQXVM4SBzrA4AbVeB
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
